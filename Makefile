@@ -71,7 +71,7 @@ run: $(NAME)
 	./$(NAME)
 
 .PHONY: docker-image
-docker-image: bindata_assetfs.go
+docker-image:
 	docker build --build-arg VERSION=$(VERSION) -t $(NAME):$(VERSION) .
 
 .PHONY: run-docker
@@ -89,15 +89,27 @@ run-docker: docker-image
 	    -p $(PORT):$(PORT) \
 	    $(NAME):$(VERSION)
 
-.PHONY: lint
-lint: .build/deps.ok
+.PHONY: lint-go
+lint-go: .build/golint
 	golint ./... | (egrep -v "^vendor/|^bindata_assetfs.go" || true)
+
+.PHONY: lint-js
+lint-js: .build/deps.ok
 	$(CURDIR)/node_modules/.bin/eslint --quiet assets/static/*.js
 
-.PHONY: test
-test: lint bindata_assetfs.go
+.PHONY: lint
+lint: lint-go lint-js
+
+.PHONY: test-go
+test-go:
 	go test -bench=. -cover `go list ./... | grep -v /vendor/`
+
+.PHONY: test-js
+test-js:
 	npm test
+
+.PHONY: test
+test: lint test-go test-js
 
 .build/dep.ok:
 	go get -u github.com/golang/dep/cmd/dep
@@ -113,7 +125,6 @@ test: lint bindata_assetfs.go
 vendor: .build/dep.ok
 	dep ensure
 	dep prune
-
 
 .PHONY: vendor-update
 vendor-update: .build/dep.ok

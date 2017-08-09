@@ -1,20 +1,45 @@
-language: go
+sudo: true
+dist: trusty
 
-go:
-  - 1.8.x
+jobs:
+  include:
+    - stage: Build Docker image
+      script: make docker-image
 
-go_import_path: github.com/cloudflare/unsee
+    - stage: Lint Go code
+      language: go
+      go:
+        - 1.8.x
+      go_import_path: github.com/cloudflare/unsee
+      cache:
+        directories:
+          - vendor
+      script: make lint-go
 
-cache:
-  directories:
-    - node_modules
-    - vendor
+    - stage: Lint JavaScript code
+      language: node_js
+      env:
+        - NODE_ENV=test
+      cache:
+        directories:
+          - node_modules
+      script: make lint-js
 
-env:
-  - NODE_ENV=test
+    - stage: Test Go code
+      language: go
+      go:
+        - 1.8.x
+      go_import_path: github.com/cloudflare/unsee
+      cache:
+        directories:
+          - vendor
+      script: make test-go
 
-before_script:
-  - nvm install 8
-
-script:
-  - make test
+    - stage: Test JavaScript code
+      language: node_js
+      env:
+        - NODE_ENV=test
+      cache:
+        directories:
+          - node_modules
+      script: make test-js
