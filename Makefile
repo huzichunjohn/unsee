@@ -102,7 +102,7 @@ lint-js: .build/npm.install
 lint: lint-go lint-js
 
 .PHONY: test-go
-test-go: .build/vendor.ok
+test-go: .build/vendor.ok bindata_assetfs.go
 	go test -bench=. -cover `go list ./... | grep -v /vendor/`
 
 .PHONY: test-js
