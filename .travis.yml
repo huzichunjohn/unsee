@@ -1,14 +1,7 @@
-sudo: true
 dist: trusty
 
 jobs:
   include:
-    - stage: Build Docker image
-      before_install:
-        - sudo apt-get update
-        - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
-      script: make docker-image
-
     - stage: Lint Go code
       language: go
       go:
@@ -21,6 +14,8 @@ jobs:
 
     - stage: Lint JavaScript code
       language: node_js
+      node_js:
+        - "8"
       env:
         - NODE_ENV=test
       cache:
@@ -33,16 +28,22 @@ jobs:
       go:
         - 1.8.x
       go_import_path: github.com/cloudflare/unsee
-      cache:
-        directories:
-          - vendor
       script: make test-go
 
     - stage: Test JavaScript code
       language: node_js
+      node_js:
+        - "8"
       env:
         - NODE_ENV=test
       cache:
         directories:
           - node_modules
       script: make test-js
+
+    - stage: Build Docker image
+      sudo: true
+      before_install:
+        - sudo apt-get update
+        - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+      script: make docker-image

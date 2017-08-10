@@ -101,7 +101,7 @@ lint-js: .build/deps.ok
 lint: lint-go lint-js
 
 .PHONY: test-go
-test-go:
+test-go: .build/vendor.ok
 	go test -bench=. -cover `go list ./... | grep -v /vendor/`
 
 .PHONY: test-js
