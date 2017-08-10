@@ -1,44 +1,35 @@
 dist: trusty
 
+go_import_path: github.com/cloudflare/unsee
+go:
+  - "1.8.x"
+node_js:
+  - "8"
+
+cache:
+  directories:
+    - node_modules
+    - vendor
+
+env:
+  - NODE_ENV=test
+
 jobs:
   include:
     - stage: Lint Go code
       language: go
-      go:
-        - 1.8.x
-      go_import_path: github.com/cloudflare/unsee
       script: make lint-go
 
     - stage: Lint JavaScript code
       language: node_js
-      node_js:
-        - "8"
-      env:
-        - NODE_ENV=test
-      cache:
-        directories:
-          - node_modules
       script: make lint-js
 
     - stage: Test Go code
       language: go
-      go:
-        - 1.8.x
-      go_import_path: github.com/cloudflare/unsee
-      cache:
-        directories:
-          - vendor
       script: make test-go
 
     - stage: Test JavaScript code
       language: node_js
-      node_js:
-        - "8"
-      env:
-        - NODE_ENV=test
-      cache:
-        directories:
-          - node_modules
       script: make test-js
 
     - stage: Build Docker image
