@@ -1,10 +1,6 @@
 dist: trusty
 
 go_import_path: github.com/cloudflare/unsee
-go:
-  - "1.8.x"
-node_js:
-  - "8"
 
 cache:
   directories:
@@ -18,18 +14,22 @@ jobs:
   include:
     - stage: Lint Go code
       language: go
+      go:  "1.8.3"
       script: make lint-go
 
     - stage: Lint JavaScript code
       language: node_js
+      node_js: "8"
       script: make lint-js
 
     - stage: Test Go code
       language: go
+      go:  "1.8.3"
       script: make test-go
 
     - stage: Test JavaScript code
       language: node_js
+      node_js: "8"
       script: make test-js
 
     - stage: Build Docker image
