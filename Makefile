@@ -37,6 +37,7 @@ endif
 	touch $@
 
 .build/npm.install: package.json package-lock.json
+	@mkdir -p .build
 	npm install
 	touch $@
 
