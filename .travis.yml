@@ -4,6 +4,9 @@ dist: trusty
 jobs:
   include:
     - stage: Build Docker image
+      before_install:
+        - sudo apt-get update
+        - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine
       script: make docker-image
 
     - stage: Lint Go code
