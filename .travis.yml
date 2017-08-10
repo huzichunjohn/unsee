@@ -7,9 +7,6 @@ jobs:
       go:
         - 1.8.x
       go_import_path: github.com/cloudflare/unsee
-      cache:
-        directories:
-          - vendor
       script: make lint-go
 
     - stage: Lint JavaScript code
@@ -28,6 +25,9 @@ jobs:
       go:
         - 1.8.x
       go_import_path: github.com/cloudflare/unsee
+      cache:
+        directories:
+          - vendor
       script: make test-go
 
     - stage: Test JavaScript code
