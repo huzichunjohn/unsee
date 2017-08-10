@@ -94,7 +94,7 @@ lint-go: .build/golint
 	golint ./... | (egrep -v "^vendor/|^bindata_assetfs.go" || true)
 
 .PHONY: lint-js
-lint-js: .build/deps.ok
+lint-js: .build/npm.install
 	$(CURDIR)/node_modules/.bin/eslint --quiet assets/static/*.js
 
 .PHONY: lint
