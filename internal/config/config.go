@@ -32,6 +32,7 @@ type configEnvs struct {
 	AnnotationsVisible       spaceSeparatedList `envconfig:"ANNOTATIONS_VISIBLE" help:"List of annotations that are visible by default"`
 	ColorLabelsStatic        spaceSeparatedList `envconfig:"COLOR_LABELS_STATIC" help:"List of label names that should have the same (but distinct) color"`
 	ColorLabelsUnique        spaceSeparatedList `envconfig:"COLOR_LABELS_UNIQUE" help:"List of label names that should have unique color"`
+	ConfigFile               string             `envconfig:"CONFIG_FILE" help:"Path to configuration file"`
 	Debug                    bool               `envconfig:"DEBUG" default:"false" help:"Enable debug mode"`
 	FilterDefault            string             `envconfig:"FILTER_DEFAULT" help:"Default filter string"`
 	JiraRegexp               spaceSeparatedList `envconfig:"JIRA_REGEX" help:"List of JIRA regex rules"`
@@ -41,6 +42,44 @@ type configEnvs struct {
 	StripLabels              spaceSeparatedList `envconfig:"STRIP_LABELS" help:"List of labels to ignore"`
 	KeepLabels               spaceSeparatedList `envconfig:"KEEP_LABELS" help:"List of labels to keep, all other labels will be stripped"`
 	WebPrefix                string             `envconfig:"WEB_PREFIX" default:"/" help:"URL prefix"`
+}
+
+type configYAML struct {
+	Alertmanagers []struct {
+		URI     string        `yaml:"uri"`
+		Timeout time.Duration `yaml:"timeout"`
+	} `yaml:"alertmanagers"`
+	AlertmanagerTTL time.Duration `yaml:"ttl"`
+	Annotations     struct {
+		DefaultHidden bool     `yaml:"default_hidden"`
+		Hidden        []string `yaml:"hidden"`
+		Visible       []string `yaml:"visible"`
+	} `yaml:"annotations"`
+	Colors struct {
+		Labels struct {
+			Static []string `yaml:"static"`
+			Unique []string `yaml:"unique"`
+		} `yaml:"labels"`
+	} `yaml:"colors"`
+	Debug  bool `yaml:"debug"`
+	Labels struct {
+		Strip []string `yaml:"strip"`
+		Keep  []string `yaml:"keep"`
+	} `yaml:"labels"`
+	Listen struct {
+		Address string `yaml:"address"`
+		Port    int    `yaml:"port"`
+		Prefix  string `yaml:"prefix"`
+	} `yaml:"listen"`
+	Filter string `yaml:"filter"`
+	JIRA   []struct {
+		Rule string `yaml:"rule"`
+		URI  string `yaml:"uri"`
+	} `yaml:"jira"`
+	Sentry struct {
+		Private string `yaml:"private"`
+		Public  string `yaml:"public"`
+	} `yaml:"sentry"`
 }
 
 // Config exposes all options required to run
